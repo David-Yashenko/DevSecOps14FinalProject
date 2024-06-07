@@ -29,9 +29,9 @@ jobs:
         run: |
           docker-compose up -d --build
           # Run tests inside the backend container without TTY
-          docker-compose exec backend pytest --cov=.
+          docker-compose run -T backend pytest --cov=.
           # Run tests inside the frontend container without TTY (if applicable)
-          docker-compose exec frontend npm test -- --coverage
+          docker-compose run -T frontend npm test -- --coverage
           docker-compose down
           # Push images to Docker Hub
           docker-compose push
