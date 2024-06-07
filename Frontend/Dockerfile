@@ -4,10 +4,6 @@ RUN sed -i 's/https/http/' /etc/apk/repositories
 
 RUN apk update && apk add --no-cache ca-certificates
 
-RUN apk add --update \
-    curl \
-    && rm -rf /var/cache/apk/*
-
 WORKDIR /usr/src/app
 
 COPY package.json ./
