@@ -28,6 +28,8 @@ jobs:
       - name: Build and run Docker Compose
         run: |
           docker-compose up -d --build
+          docker-compose logs frontend
+          docker-compose logs backend
           # Run tests inside the backend container
           docker-compose exec backend pytest --cov=.
           # Run tests inside the frontend container (if applicable)
