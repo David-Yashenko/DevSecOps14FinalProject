@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/usr/src/app
+    stdin_open: true
+    environment:
+      - NODE_ENV=development
+      - REACT_APP_API_URL=http://localhost:5001/api
+    depends_on:
+      - backend
+    networks:
+      - mynetwork
+
+  backend:
+    build: ./backend
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./backend:/app
+    environment:
+      - FLASK_ENV=development
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: bridge
