@@ -40,5 +40,14 @@ jobs:
           fi
           echo "Frontend service is up and returned 200."
           docker-compose down
-          # Push images to Docker Hub
-          docker-compose push
+
+      - name: Tag and Push Docker Images
+        run: |
+          # Tagging frontend image
+          docker tag devsecops14finalproject_frontend ${{ secrets.DOCKER_USERNAME }}/devsecops14finalproject_frontend:latest
+          # Tagging backend image
+          docker tag devsecops14finalproject_backend ${{ secrets.DOCKER_USERNAME }}/devsecops14finalproject_backend:latest
+          # Pushing frontend image
+          docker push ${{ secrets.DOCKER_USERNAME }}/devsecops14finalproject_frontend:latest
+          # Pushing backend image
+          docker push ${{ secrets.DOCKER_USERNAME }}/devsecops14finalproject_backend:latest
