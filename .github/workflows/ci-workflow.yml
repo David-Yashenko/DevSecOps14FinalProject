@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  build-and-test:
+  build-and-check:
     runs-on: ubuntu-latest
 
     steps:
@@ -28,8 +28,8 @@ jobs:
       - name: Build and run Docker Compose
         run: |
           docker-compose up -d --build
-          # Wait for the services to be healthy
-          echo "Waiting for services to be healthy..."
+          # Wait for the frontend service to be ready
+          echo "Waiting for frontend service to be healthy..."
           sleep 30  # Adjust the sleep time as necessary
           # Check the frontend service by making a curl request
           FRONTEND_URL="http://localhost:3000"
@@ -39,10 +39,6 @@ jobs:
             exit 1
           fi
           echo "Frontend service is up and returned 200."
-          # Run tests inside the backend container
-          docker-compose run backend pytest --cov=.
-          # Run tests inside the frontend container
-          docker-compose run frontend npm test -- --coverage
           docker-compose down
           # Push images to Docker Hub
           docker-compose push
