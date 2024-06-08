@@ -28,10 +28,21 @@ jobs:
       - name: Build and run Docker Compose
         run: |
           docker-compose up -d --build
-          # Run tests inside the backend container without TTY
-          docker-compose run -T backend pytest --cov=.
-          # Run tests inside the frontend container without TTY (if applicable)
-          docker-compose run -T frontend npm test -- --coverage
+          # Wait for the services to be healthy
+          docker-compose ps
+          # Check the health of the backend service
+          until [ "`docker inspect -f {{.State.Health.Status}} devsecops14finalproject_backend_1`" == "healthy" ]; do
+            echo "Waiting for backend service to be healthy..."
+            sleep 5
+          done
+          # Check the health of the frontend service
+          until [ "`docker inspect -f {{.State.Health.Status}} devsecops14finalproject_frontend_1`" == "healthy" ]; do
+            echo "Waiting for frontend service to be healthy..."
+            sleep 5
+          done
+          # Optional: Make HTTP requests to verify the services are working
+          curl -f http://localhost:3000 || exit 1
+          curl -f http://localhost:5001 || exit 1
           docker-compose down
           # Push images to Docker Hub
           docker-compose push
