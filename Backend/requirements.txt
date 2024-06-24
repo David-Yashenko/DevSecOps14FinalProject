@@ -6,3 +6,4 @@ flask_cors
 google
 googlesearch-python
 pytest
+gunicorn
