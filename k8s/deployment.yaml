@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: your-docker-username/devsecops14finalproject_frontend:latest
+          image: david6436/devsecops14finalproject_frontend:latest
           ports:
             - containerPort: 80
           env:
@@ -37,6 +37,6 @@ spec:
     spec:
       containers:
         - name: backend
-          image: your-docker-username/devsecops14finalproject_backend:latest
+          image: david6436/devsecops14finalproject_backend:latest
           ports:
             - containerPort: 5001
