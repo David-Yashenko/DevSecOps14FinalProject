@@ -29,28 +29,32 @@ jobs:
         id: vars
         run: |
           COMMIT_SHA=${{ github.sha }}
-          SHORT_SHA=${COMMIT_SHA: -7}
+          SHORT_SHA=${COMMIT_SHA:0:7}
           echo "COMMIT_SHA=${COMMIT_SHA}" >> $GITHUB_ENV
           echo "SHORT_SHA=${SHORT_SHA}" >> $GITHUB_ENV
 
-      - name: Build Docker Images
+      - name: Build and run Docker Compose
         run: |
-          docker-compose build
+          docker-compose up -d --build
+          echo "Waiting for frontend service to be healthy..."
+          sleep 30
+          FRONTEND_URL="http://localhost:80"
+          RESPONSE=$(curl --write-out "%{http_code}" --silent --output /dev/null $FRONTEND_URL)
+          if [ "$RESPONSE" -ne 200 ]; then
+            echo "Frontend service did not return 200. Exiting..."
+            exit 1
+          fi
+          echo "Frontend service is up and returned 200."
+          docker-compose down
 
       - name: Tag and Push Docker Images
         run: |
           SHORT_SHA=${{ env.SHORT_SHA }}
-          FRONTEND_IMAGE_ID=$(docker-compose images -q frontend)
-          BACKEND_IMAGE_ID=$(docker-compose images -q backend)
 
           # Tagging and pushing frontend image
-          docker tag $FRONTEND_IMAGE_ID ${{ secrets.DOCKER_USERNAME }}/devsecops14finalproject_frontend:$SHORT_SHA
-          docker tag $FRONTEND_IMAGE_ID ${{ secrets.DOCKER_USERNAME }}/devsecops14finalproject_frontend:latest
+          docker tag devsecops14finalproject_frontend ${{ secrets.DOCKER_USERNAME }}/devsecops14finalproject_frontend:$SHORT_SHA
           docker push ${{ secrets.DOCKER_USERNAME }}/devsecops14finalproject_frontend:$SHORT_SHA
-          docker push ${{ secrets.DOCKER_USERNAME }}/devsecops14finalproject_frontend:latest
 
           # Tagging and pushing backend image
-          docker tag $BACKEND_IMAGE_ID ${{ secrets.DOCKER_USERNAME }}/devsecops14finalproject_backend:$SHORT_SHA
-          docker tag $BACKEND_IMAGE_ID ${{ secrets.DOCKER_USERNAME }}/devsecops14finalproject_backend:latest
+          docker tag docker tag devsecops14finalproject_backend ${{ secrets.DOCKER_USERNAME }}/devsecops14finalproject_backend:$SHORT_SHA
           docker push ${{ secrets.DOCKER_USERNAME }}/devsecops14finalproject_backend:$SHORT_SHA
-          docker push ${{ secrets.DOCKER_USERNAME }}/devsecops14finalproject_backend:latest
