@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: DevSecOps14FinalProject
+  name: devsecops14finalproject
   namespace: argocd
 spec:
   project: default
