@@ -2,8 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend
-  labels:
-    app: frontend
 spec:
   replicas: 2
   selector:
@@ -16,28 +14,17 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: david6436/devsecops14finalproject_frontend:latest
+          image: your-docker-username/devsecops14finalproject_frontend:latest
           ports:
             - containerPort: 80
-          livenessProbe:
-            httpGet:
-              path: /
-              port: 80
-            initialDelaySeconds: 30
-            periodSeconds: 10
-          readinessProbe:
-            httpGet:
-              path: /
-              port: 80
-            initialDelaySeconds: 30
-            periodSeconds: 10
+          env:
+            - name: REACT_APP_BACKEND_URL
+              value: "http://backend:5001"
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend
-  labels:
-    app: backend
 spec:
   replicas: 2
   selector:
@@ -50,7 +37,6 @@ spec:
     spec:
       containers:
         - name: backend
-          image: david6436/devsecops14finalproject_backend:latest
+          image: your-docker-username/devsecops14finalproject_backend:latest
           ports:
-            - containerPort: 8000
-
+            - containerPort: 5001
