@@ -28,10 +28,8 @@ jobs:
       - name: Build and run Docker Compose
         run: |
           docker-compose up -d --build
-          # Wait for the frontend service to be ready
           echo "Waiting for frontend service to be healthy..."
-          sleep 30  # Adjust the sleep time as necessary
-          # Check the frontend service by making a curl request
+          sleep 30 
           FRONTEND_URL="http://localhost:80"
           RESPONSE=$(curl --write-out "%{http_code}" --silent --output /dev/null $FRONTEND_URL)
           if [ "$RESPONSE" -ne 200 ]; then
@@ -43,11 +41,7 @@ jobs:
 
       - name: Tag and Push Docker Images
         run: |
-          # Tagging frontend image
-          docker tag devsecops14finalproject_frontend ${{ secrets.DOCKER_USERNAME }}/devsecops14finalproject_frontend:latest
-          # Tagging backend image
-          docker tag devsecops14finalproject_backend ${{ secrets.DOCKER_USERNAME }}/devsecops14finalproject_backend:latest
-          # Pushing frontend image
+          docker tag $(docker-compose images -q frontend) ${{ secrets.DOCKER_USERNAME }}/devsecops14finalproject_frontend:latest
+          docker tag $(docker-compose images -q backend) ${{ secrets.DOCKER_USERNAME }}/devsecops14finalproject_backend:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/devsecops14finalproject_frontend:latest
-          # Pushing backend image
           docker push ${{ secrets.DOCKER_USERNAME }}/devsecops14finalproject_backend:latest

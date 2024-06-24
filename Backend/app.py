@@ -8,13 +8,6 @@ app = Flask(__name__)
 api = Api(app, prefix='/api')
 CORS(app)
 
-# class Check(Resource):
-#     def post(self):
-#         data = request.get_json()
-#         name = data.get('nm')
-#         result = process_name(name)  # Call the process_name function
-#         return jsonify(result=result)
-
 api.add_resource(Home, '/')
 api.add_resource(Check, '/check')
 api.add_resource(User, '/<usr>')

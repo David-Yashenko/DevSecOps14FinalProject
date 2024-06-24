@@ -53,3 +53,4 @@ spec:
           image: david6436/devsecops14finalproject_backend:latest
           ports:
             - containerPort: 8000
+
