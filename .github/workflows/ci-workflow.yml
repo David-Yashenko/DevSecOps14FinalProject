@@ -32,7 +32,7 @@ jobs:
           echo "Waiting for frontend service to be healthy..."
           sleep 30  # Adjust the sleep time as necessary
           # Check the frontend service by making a curl request
-          FRONTEND_URL="http://localhost:3000"
+          FRONTEND_URL="http://localhost:80"
           RESPONSE=$(curl --write-out "%{http_code}" --silent --output /dev/null $FRONTEND_URL)
           if [ "$RESPONSE" -ne 200 ]; then
             echo "Frontend service did not return 200. Exiting..."
