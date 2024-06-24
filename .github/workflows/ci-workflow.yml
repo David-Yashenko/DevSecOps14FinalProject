@@ -53,8 +53,12 @@ jobs:
 
           # Tagging and pushing frontend image
           docker tag devsecops14finalproject_frontend ${{ secrets.DOCKER_USERNAME }}/devsecops14finalproject_frontend:$SHORT_SHA
+          docker tag devsecops14finalproject_frontend ${{ secrets.DOCKER_USERNAME }}/devsecops14finalproject_frontend:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/devsecops14finalproject_frontend:$SHORT_SHA
+          docker push ${{ secrets.DOCKER_USERNAME }}/devsecops14finalproject_frontend:latest
 
           # Tagging and pushing backend image
           docker tag devsecops14finalproject_backend ${{ secrets.DOCKER_USERNAME }}/devsecops14finalproject_backend:$SHORT_SHA
           docker push ${{ secrets.DOCKER_USERNAME }}/devsecops14finalproject_backend:$SHORT_SHA
+          docker tag devsecops14finalproject_backend ${{ secrets.DOCKER_USERNAME }}/devsecops14finalproject_backend:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/devsecops14finalproject_backend:latest
