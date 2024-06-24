@@ -1,7 +1,6 @@
-FROM node:hydrogen-alpine3.19
+FROM node:hydrogen-alpine3.19 as build
 
 RUN sed -i 's/https/http/' /etc/apk/repositories
-
 RUN apk update && apk add --no-cache ca-certificates
 
 WORKDIR /usr/src/app
@@ -17,7 +16,12 @@ ENV NODE_OPTIONS=--openssl-legacy-provider
 RUN npm install
 
 COPY . .
+RUN npm run build
 
-EXPOSE 3000
+FROM nginx:alpine
 
-CMD ["npm", "start"]
+COPY --from=build /usr/src/app/build /usr/share/nginx/html
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
