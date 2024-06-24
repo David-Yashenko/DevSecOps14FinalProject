@@ -1,26 +1,20 @@
-FROM node:hydrogen-alpine3.19 as build
-
-RUN sed -i 's/https/http/' /etc/apk/repositories
-RUN apk update && apk add --no-cache ca-certificates
+FROM node:14-alpine
 
 WORKDIR /usr/src/app
 
-COPY package.json ./
-COPY package-lock.json ./
-
-RUN npm config set strict-ssl false
-RUN npm config set registry http://registry.npmjs.org/
-
-ENV NODE_OPTIONS=--openssl-legacy-provider
+COPY package*.json ./
 
 RUN npm install
 
 COPY . .
+
+ENV REACT_APP_API_URL=http://backend:5001
+
 RUN npm run build
 
 FROM nginx:alpine
 
-COPY --from=build /usr/src/app/build /usr/share/nginx/html
+COPY --from=0 /usr/src/app/build /usr/share/nginx/html
 
 EXPOSE 80
 
