@@ -38,13 +38,12 @@ jobs:
           docker-compose up -d --build
           echo "Waiting for frontend service to be healthy..."
           sleep 30
-          FRONTEND_URL="http://localhost:80"
-          RESPONSE=$(curl --write-out "%{http_code}" --silent --output /dev/null $FRONTEND_URL)
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}\n" -X POST "http://localhost/api/check" -H "Content-Type: application/json" -d '{"nm":"david yashenko"}')
           if [ "$RESPONSE" -ne 200 ]; then
-            echo "Frontend service did not return 200. Exiting..."
+            echo "post request did not return 200. Exiting..."
             exit 1
           fi
-          echo "Frontend service is up and returned 200."
+          echo "frontend service is up and post request returned 200."
           docker-compose down
 
       - name: Tag and Push Docker Images
