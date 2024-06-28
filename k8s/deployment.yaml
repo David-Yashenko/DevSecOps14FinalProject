@@ -37,6 +37,6 @@ spec:
     spec:
       containers:
         - name: backend
-          image: david6436/devsecops14finalproject_backend:latest
+          image: david6436/devsecops14finalproject_backend:6abadad
           ports:
             - containerPort: 8000
